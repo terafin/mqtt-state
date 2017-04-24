@@ -90,25 +90,36 @@ app.get('/', function(req, res) {
     redis.keys('*', function(err, result) {
         logging.log('keys: ' + result)
         const keys = result.sort()
-        var html = ''
+        redis.mget(keys, function(err, values) {
+            var html = ''
 
-        html += '<!DOCTYPE html>'
-        html += '<html>'
-        html += '<body>'
-        html += '<h1>All Devices</h1>'
-        html += '<table style="width:100%">'
+            html += '<!DOCTYPE html>'
+            html += '<html>'
+            html += '<body>'
+            html += '<h1>All Devices</h1>'
+            html += '<table style="width:100%">'
 
-        keys.forEach(function(key) {
-            html += '<tr><td>'
-            html += key
-            html += '</td></tr>'
-        }, this)
+            for (var index = 0; index < keys.length; index++) {
+                var key = keys[index]
+                var value = values[index]
 
-        html += '</table>'
-        html += '</body>'
-        html += '</html>'
+                html += '<tr>'
+                html += '<td>'
+                html += key
+                html += '</td>'
+                html += '<td>'
+                html += value
+                html += '</td>'
 
-        res.send(html)
+                html += '</tr>'
+            }
+
+            html += '</table>'
+            html += '</body>'
+            html += '</html>'
+
+            res.send(html)
+        })
     })
 })
 
