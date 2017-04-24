@@ -56,6 +56,9 @@ client.on('message', (topic, message) => {
     if (topic.endsWith('/set')) return
     if (topic.startsWith('/homeseer/action/')) return
 
+    const components = topic.split('/')
+    if (components[0] === 'homeseer' && components[1] === 'action') return
+
     redis.get(topic, function(err, result) {
         if (result !== null) {
             // logging.log('already have: ' + topic + ' value: ' + result)
@@ -99,7 +102,6 @@ app.get('/', function(req, res) {
             html += '<tr><td>'
             html += key
             html += '</td></tr>'
-
         }, this)
 
         html += '</table>'
