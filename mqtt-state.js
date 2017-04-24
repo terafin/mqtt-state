@@ -103,6 +103,9 @@ app.get('/', function(req, res) {
                 var key = keys[index]
                 var value = values[index]
 
+                if (key.endsWith('/set')) continue
+                if (key.startsWith('/homeseer/action/')) continue
+
                 html += '<tr>'
                 html += '<td>'
                 html += key
