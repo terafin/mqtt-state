@@ -5,16 +5,19 @@ const express = require('express')
 
 const logging = require('./homeautomation-js-lib/logging.js')
 
-// Set up Logging
-logging.set_enabled(true)
-logging.setRemoteHost('10.0.1.42', 5000)
-
 // Config
 const host = process.env.MQTT_HOST
 const port = process.env.LISTENING_PORT
 const redisHost = process.env.REDIS_HOST
 const redisPort = process.env.REDIS_PORT
 const redisDB = process.env.REDIS_DATABASE
+
+const syslogHost = process.env.SYSLOG_HOST
+const syslogPort = process.env.SYSLOG_PORT
+
+// Set up Logging
+logging.set_enabled(true)
+logging.setRemoteHost(syslogHost, syslogPort)
 
 const redis = Redis.createClient({
     host: redisHost,
