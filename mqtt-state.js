@@ -7,6 +7,7 @@ const logging = require('./homeautomation-js-lib/logging.js')
 
 // Set up Logging
 logging.set_enabled(true)
+logging.setRemoteHost('10.0.1.42', 5000)
 
 // Config
 const host = process.env.MQTT_HOST
@@ -61,11 +62,12 @@ client.on('message', (topic, message) => {
 
     redis.get(topic, function(err, result) {
         if (result !== null) {
-            // logging.log('already have: ' + topic + ' value: ' + result)
+            //logging.log('topic: ' + topic + ' value: ' + result)
+            logging.info(JSON.stringify({ topic: topic, value: ('' + message) }))
         } else {
             logging.log('adding: ' + topic + ' value: ' + message)
         }
-        redis.set(topic, message)
+        //redis.set(topic, message)
     })
 })
 
