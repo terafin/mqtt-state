@@ -58,9 +58,6 @@ client.on('disconnect', () => {
 })
 
 client.on('message', (topic, message) => {
-    const components = topic.split('/')
-    if (components[0] === 'homeseer' && components[1] === 'action') return
-
     redis.valueForTopic(topic, function(err, result) {
         if (err !== null) return
 
