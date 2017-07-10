@@ -2,7 +2,7 @@
 const mqtt = require('mqtt')
 const Redis = require('redis')
 const express = require('express')
-const Influx = require('../../')
+    // const Influx = require('../../')
 
 const logging = require('./homeautomation-js-lib/logging.js')
 require('./homeautomation-js-lib/devices.js')
@@ -17,20 +17,20 @@ const client = mqtt.setupClient(function() {
     client.subscribe('#')
 }, null)
 
-const influx = new Influx.InfluxDB({
-    host: 'localhost',
-    database: 'express_response_db',
-    schema: [{
-        measurement: 'response_times',
-        fields: {
-            path: Influx.FieldType.STRING,
-            duration: Influx.FieldType.INTEGER
-        },
-        tags: [
-            'host'
-        ]
-    }]
-})
+// const influx = new Influx.InfluxDB({
+//     host: 'localhost',
+//     database: 'express_response_db',
+//     schema: [{
+//         measurement: 'response_times',
+//         fields: {
+//             path: Influx.FieldType.STRING,
+//             duration: Influx.FieldType.INTEGER
+//         },
+//         tags: [
+//             'host'
+//         ]
+//     }]
+// })
 
 client.on('message', (topic, message) => {
     redis.valueForTopic(topic, function(err, result) {
