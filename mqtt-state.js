@@ -33,7 +33,7 @@ const client = mqtt.setupClient(function() {
 // })
 
 client.on('message', (topic, message) => {
-    if (topic.hasPrefix('happy')) {
+    if (topic.startsWith('happy')) {
         return
     }
 
