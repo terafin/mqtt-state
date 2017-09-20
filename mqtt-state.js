@@ -33,6 +33,10 @@ const client = mqtt.setupClient(function() {
 // })
 
 client.on('message', (topic, message) => {
+    if (topic.hasPrefix('happy')) {
+        return
+    }
+
     redis.valueForTopic(topic, function(err, result) {
         if (err !== null) return
 
@@ -125,6 +129,7 @@ app.get('/', function(req, res) {
 
                 if (key.endsWith('/set')) continue
                 if (key.startsWith('/homeseer/action/')) continue
+                if (key.startsWith('happy')) continue
 
                 html += '<tr>\n'
                 html += '<td>\n'
@@ -178,6 +183,7 @@ app.get('/device-file/', function(req, res) {
 
                 if (key.endsWith('/set')) continue
                 if (key.startsWith('/homeseer/action/')) continue
+                if (key.startsWith('happy')) continue
 
                 var components = key.split('/')
                 var lastComponents = components.slice(components.length - 2, components.length)
