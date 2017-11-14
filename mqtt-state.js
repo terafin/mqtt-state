@@ -207,6 +207,46 @@ app.get('/device-file/', function(req, res) {
     })
 })
 
+// Add headers
+app.use(function(req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001')
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type')
+
+    // Pass to next layer of middleware
+    next()
+})
+
+app.get('/json/', function(req, res) {
+    redis.keys('*', function(err, result) {
+        if (result === null) {
+            res.send('err' + err)
+            return
+        }
+        logging.log('keys: ' + result)
+        const keys = result.sort()
+        redis.mget(keys, function(err, values) {
+            var devices = {}
+            for (var index = 0; index < keys.length; index++) {
+                var key = keys[index]
+                if (key.length == 1) continue
+                if (key.endsWith('/set')) continue
+                if (key.startsWith('happy')) continue
+                devices[key] = values[index]
+
+            }
+
+            res.send(JSON.stringify(devices))
+        })
+    })
+})
+
 app.listen(port, function() {
     logging.log('MQTT Store listening on port: ', port)
 })
