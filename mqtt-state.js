@@ -214,8 +214,6 @@ app.configure(function() {
         res.header('Access-Control-Allow-Headers', 'X-Requested-With')
         next()
 
-        // Pass to next layer of middleware
-        next()
     })
 })
 
