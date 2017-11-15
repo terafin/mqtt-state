@@ -208,13 +208,15 @@ app.get('/device-file/', function(req, res) {
 })
 
 // Add headers
-app.use(function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*')
-    res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE')
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested With, Content-Type, Accept')
+app.configure(function() {
+    app.use(function(req, res, next) {
+        res.header('Access-Control-Allow-Origin', '*')
+        res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE')
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested With, Content-Type, Accept')
 
-    // Pass to next layer of middleware
-    next()
+        // Pass to next layer of middleware
+        next()
+    })
 })
 
 app.get('/json/', function(req, res) {
