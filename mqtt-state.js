@@ -2,12 +2,11 @@
 const mqtt = require('mqtt')
 const Redis = require('redis')
 const express = require('express')
-    // const Influx = require('../../')
 
-const logging = require('./homeautomation-js-lib/logging.js')
-require('./homeautomation-js-lib/devices.js')
-require('./homeautomation-js-lib/redis_helpers.js')
-require('./homeautomation-js-lib/mqtt_helpers.js')
+const logging = require('homeautomation-js-lib/logging.js')
+require('homeautomation-js-lib/devices.js')
+require('homeautomation-js-lib/redis_helpers.js')
+require('homeautomation-js-lib/mqtt_helpers.js')
 
 // Config
 const port = process.env.LISTENING_PORT

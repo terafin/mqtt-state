@@ -12,12 +12,10 @@
     },
     "dependencies": {
         "express": "^4.15.2",
-        "influx": "^5.0.7",
+        "homeautomation-js-lib": "git://github.com/terafin/homeautomation-js-lib.git",
         "lodash": "^4.17.4",
         "mqtt": "^2.6.2",
-        "redis": "^2.7.1",
-        "winston": "^2.3.1",
-        "winston-splunk-httplogger": "^1.2.2"
+        "redis": "^2.7.1"
     },
     "engines": {
         "node": ">=4"
