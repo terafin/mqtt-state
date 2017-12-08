@@ -16,21 +16,6 @@ const client = mqtt.setupClient(function() {
     client.subscribe('#')
 }, null)
 
-// const influx = new Influx.InfluxDB({
-//     host: 'localhost',
-//     database: 'express_response_db',
-//     schema: [{
-//         measurement: 'response_times',
-//         fields: {
-//             path: Influx.FieldType.STRING,
-//             duration: Influx.FieldType.INTEGER
-//         },
-//         tags: [
-//             'host'
-//         ]
-//     }]
-// })
-
 client.on('message', (topic, message) => {
     if (topic.startsWith('happy')) {
         return
@@ -40,10 +25,10 @@ client.on('message', (topic, message) => {
         if (err !== null) return
 
         if (result !== null) {
-            //logging.log('topic: ' + topic + ' value: ' + result)
+            //logging.info('topic: ' + topic + ' value: ' + result)
             logging.info(JSON.stringify({ topic: topic, value: ('' + message) }))
         } else {
-            logging.log('adding: ' + topic + ' value: ' + message)
+            logging.info('adding: ' + topic + ' value: ' + message)
         }
         redis.set(topic, message)
     })
@@ -61,7 +46,7 @@ app.use(function(req, res, next) {
 
 app.get('/', function(req, res) {
     redis.keys('*', function(err, result) {
-        logging.log('keys: ' + result)
+        logging.info('keys: ' + result)
         const keys = result.sort()
         redis.mget(keys, function(err, values) {
             var html = ''
@@ -180,7 +165,7 @@ app.get('/device-file/', function(req, res) {
             res.send('err' + err)
             return
         }
-        logging.log('keys: ' + result)
+        logging.info('keys: ' + result)
         const keys = result.sort()
         redis.mget(keys, function(err, values) {
             var html = ''
@@ -219,7 +204,7 @@ app.get('/json/', function(req, res) {
             res.send('err' + err)
             return
         }
-        logging.log('keys: ' + result)
+        logging.info('keys: ' + result)
         const keys = result.sort()
         redis.mget(keys, function(err, values) {
             var devices = {}
@@ -238,5 +223,5 @@ app.get('/json/', function(req, res) {
 })
 
 app.listen(port, function() {
-    logging.log('MQTT Store listening on port: ', port)
+    logging.info('MQTT Store listening on port: ', port)
 })
