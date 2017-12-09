@@ -26,6 +26,7 @@ function isInterestingDevice(deviceTopic) {
 
 // Config
 const port = process.env.LISTENING_PORT
+const expireAfterMinutes = process.env.EXPIRE_KEYS_AFTER_MINUTES
 
 const redis = Redis.setupClient(null)
 const client = mqtt.setupClient(function() {
@@ -39,14 +40,19 @@ client.on('message', (topic, message) => {
 
     redis.valueForTopic(topic, function(err, result) {
         if (err !== null) return
-
+        if (!isInterestingDevice(topic)) return
         if (result !== null) {
             //logging.info('topic: ' + topic + ' value: ' + result)
             logging.info(JSON.stringify({ topic: topic, value: ('' + message) }))
         } else {
             logging.info('adding: ' + topic + ' value: ' + message)
         }
-        redis.set(topic, message)
+        if (_.isNil(expireAfterMinutes)) {
+            redis.set(topic, message)
+        } else {
+            redis.set(topic, message, 'EX', (expireAfterMinutes * 60)) // redis takes seconds
+        }
+
     })
 })
 
