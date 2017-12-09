@@ -2,11 +2,27 @@
 const mqtt = require('mqtt')
 const Redis = require('redis')
 const express = require('express')
+const _ = require('lodash')
 
 const logging = require('homeautomation-js-lib/logging.js')
 require('homeautomation-js-lib/devices.js')
 require('homeautomation-js-lib/redis_helpers.js')
 require('homeautomation-js-lib/mqtt_helpers.js')
+
+
+function isInterestingDevice(deviceTopic) {
+    if (_.isNil(deviceTopic)) return false
+    if (!deviceTopic.startsWith('/')) return false
+    if (deviceTopic.length == 1) return false
+    if (deviceTopic.includes('/isy')) return false
+    if (deviceTopic.includes('test')) return false
+    if (deviceTopic.endsWith('/set')) return false
+    if (deviceTopic.startsWith('/homeseer/action/')) return false
+    if (deviceTopic.startsWith('happy')) return false
+
+
+    return true
+}
 
 // Config
 const port = process.env.LISTENING_PORT
@@ -118,9 +134,7 @@ app.get('/', function(req, res) {
                 var key = keys[index]
                 var value = values[index]
 
-                if (key.endsWith('/set')) continue
-                if (key.startsWith('/homeseer/action/')) continue
-                if (key.startsWith('happy')) continue
+                if (!isInterestingDevice(key)) continue
 
                 html += '<tr>\n'
                 html += '<td>\n'
@@ -172,9 +186,7 @@ app.get('/device-file/', function(req, res) {
             for (var index = 0; index < keys.length; index++) {
                 var key = keys[index]
 
-                if (key.endsWith('/set')) continue
-                if (key.startsWith('/homeseer/action/')) continue
-                if (key.startsWith('happy')) continue
+                if (!isInterestingDevice(key)) continue
 
                 var components = key.split('/')
                 var lastComponents = components.slice(components.length - 2, components.length)
@@ -210,9 +222,8 @@ app.get('/json/', function(req, res) {
             var devices = {}
             for (var index = 0; index < keys.length; index++) {
                 var key = keys[index]
-                if (key.length == 1) continue
-                if (key.endsWith('/set')) continue
-                if (key.startsWith('happy')) continue
+                if (!isInterestingDevice(key)) continue
+
                 devices[key] = values[index]
 
             }
