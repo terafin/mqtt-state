@@ -30,17 +30,16 @@ const expireAfterMinutes = process.env.EXPIRE_KEYS_AFTER_MINUTES
 
 const redis = Redis.setupClient(null)
 const client = mqtt.setupClient(function() {
-    client.subscribe('#')
+    client.subscribe('/#')
 }, null)
 
-client.on('message', (topic, message) => {
-    if (topic.startsWith('happy')) {
-        return
-    }
+client.on('message', (topic, message, packet) => {
+    if (!isInterestingDevice(topic)) return
+    if (!_.isNil(packet) && packet.retain == false) return
+
 
     redis.valueForTopic(topic, function(err, result) {
         if (err !== null) return
-        if (!isInterestingDevice(topic)) return
         if (result !== null) {
             //logging.info('topic: ' + topic + ' value: ' + result)
             logging.info(JSON.stringify({ topic: topic, value: ('' + message) }))
