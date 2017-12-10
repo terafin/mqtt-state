@@ -20,7 +20,6 @@ function isInterestingDevice(deviceTopic) {
     if (deviceTopic.startsWith('/homeseer/action/')) return false
     if (deviceTopic.startsWith('happy')) return false
 
-
     return true
 }
 
@@ -34,22 +33,28 @@ const client = mqtt.setupClient(function() {
 }, null)
 
 client.on('message', (topic, message, packet) => {
-    if (!isInterestingDevice(topic)) return
-    if (!_.isNil(packet) && packet.retain == false) return
-
+    if (!isInterestingDevice(topic)) {
+        return
+    }
 
     redis.valueForTopic(topic, function(err, result) {
-        if (err !== null) return
+        var timeToExpire = expireAfterMinutes
+
+        if (err !== null) {
+            logging.info(' => redis error')
+            return
+        }
+
         if (result !== null) {
             //logging.info('topic: ' + topic + ' value: ' + result)
             logging.info(JSON.stringify({ topic: topic, value: ('' + message) }))
         } else {
-            logging.info('adding: ' + topic + ' value: ' + message)
+            logging.debug('adding: ' + topic + ' value: ' + message)
         }
-        if (_.isNil(expireAfterMinutes)) {
+        if (_.isNil(timeToExpire)) {
             redis.set(topic, message)
         } else {
-            redis.set(topic, message, 'EX', (expireAfterMinutes * 60)) // redis takes seconds
+            redis.set(topic, message, 'EX', (timeToExpire * 60)) // redis takes seconds
         }
 
     })
@@ -67,7 +72,6 @@ app.use(function(req, res, next) {
 
 app.get('/', function(req, res) {
     redis.keys('*', function(err, result) {
-        logging.info('keys: ' + result)
         const keys = result.sort()
         redis.mget(keys, function(err, values) {
             var html = ''
@@ -184,7 +188,6 @@ app.get('/device-file/', function(req, res) {
             res.send('err' + err)
             return
         }
-        logging.info('keys: ' + result)
         const keys = result.sort()
         redis.mget(keys, function(err, values) {
             var html = ''
@@ -221,7 +224,6 @@ app.get('/json/', function(req, res) {
             res.send('err' + err)
             return
         }
-        logging.info('keys: ' + result)
         const keys = result.sort()
         redis.mget(keys, function(err, values) {
             var devices = {}
