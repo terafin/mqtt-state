@@ -20,6 +20,8 @@ function isInterestingDevice(deviceTopic) {
     if (deviceTopic.startsWith('/homeseer/action/')) return false
     if (deviceTopic.startsWith('happy')) return false
     if (deviceTopic.startsWith('/deconz')) return false
+    if (deviceTopic.startsWith('/vera')) return false
+    if (deviceTopic.startsWith('/sonos')) return false
     if (deviceTopic.startsWith('/hubitat')) return false
     if (deviceTopic.startsWith('/openmqtt')) return false
     if (deviceTopic.startsWith('/xiaomi')) return false
