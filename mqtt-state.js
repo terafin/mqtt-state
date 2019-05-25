@@ -4,12 +4,11 @@ const Redis = require('redis')
 const express = require('express')
 const _ = require('lodash')
 const health = require('homeautomation-js-lib/health.js')
-
+const mqtt_helpers = require('homeautomation-js-lib/mqtt_helpers.js')
 const logging = require('homeautomation-js-lib/logging.js')
+
 require('homeautomation-js-lib/devices.js')
 require('homeautomation-js-lib/redis_helpers.js')
-require('homeautomation-js-lib/mqtt_helpers.js')
-
 
 const isInterestingDevice = function(deviceTopic) {
 	if (_.isNil(deviceTopic)) { 
@@ -73,7 +72,7 @@ const redis = Redis.setupClient(function() {
 	health.unhealthyEvent()
 })
 
-const client = mqtt.setupClient(function() {
+const client = mqtt_helpers.setupClient(function() {
 	health.healthyEvent()
 	client.subscribe('/#')
 }, null)
