@@ -13,7 +13,7 @@
     "dependencies": {
         "express": "latest",
         "homeautomation-js-lib": "git://github.com/terafin/homeautomation-js-lib.git",
-        "lodash": "latest",
+        "lodash": "4.17.16",
         "mqtt": "latest",
         "redis": "^2.8.0"
     },
