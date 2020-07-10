@@ -1,23 +1,23 @@
 {
-    "name": "mqtt-state",
-    "version": "0.0.1",
-    "description": "MQTT simple state storage",
-    "license": "MIT",
-    "main": "mqtt-state.js",
-    "repository": {
-        "url": "https://github.com/terafin/mqtt-state"
-    },
-    "scripts": {
-        "start": "node mqtt-state.js"
-    },
-    "dependencies": {
-        "express": "latest",
-        "homeautomation-js-lib": "git://github.com/terafin/homeautomation-js-lib.git",
-        "lodash": "4.17.16",
-        "mqtt": "latest",
-        "redis": "^2.8.0"
-    },
-    "engines": {
-        "node": ">=4"
-    }
+  "name": "mqtt-state",
+  "version": "0.0.1",
+  "description": "MQTT simple state storage",
+  "license": "MIT",
+  "main": "mqtt-state.js",
+  "repository": {
+    "url": "https://github.com/terafin/mqtt-state"
+  },
+  "scripts": {
+    "start": "node mqtt-state.js"
+  },
+  "dependencies": {
+    "express": "latest",
+    "homeautomation-js-lib": "git://github.com/terafin/homeautomation-js-lib.git",
+    "lodash": "4.17.16",
+    "mqtt": "latest",
+    "redis": "^2.8.0"
+  },
+  "engines": {
+    "node": ">=4"
+  }
 }
