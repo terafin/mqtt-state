@@ -84,7 +84,7 @@ client.on('message', (topic, message, packet) => {
 		return
 	}
 
-	redis.valueForTopic(topic, function(err, result) {
+	redis.get(topic, function(err, result) {
 		var timeToExpire = expireAfterMinutes
 
 		if (err !== null) {
